@@ -25,9 +25,6 @@ class lightAdapter:
       while(self.running):
          now = current_milli_time()
          for pixel in range(0, self.pixelsAmount):
-            red = 255
-            blue = 255
-            green = 0
             self.pixels[pixel] = self.pixelBuffer[pixel] #(red, blue, green)
          self.pixels.show()
       print("Stopped")
@@ -49,5 +46,4 @@ class lightAdapter:
 
    def loopBuffer(self, pattern):
       for i in range(0, self.pixelsAmount):
-         print(i)
          self.pixelBuffer[i] = pattern[i%len(pattern)]
