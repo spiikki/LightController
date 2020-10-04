@@ -12,8 +12,3 @@ RaspberryPi, NeoPixel led-strip
 
 `pip3 install -r requirements.txt`
 
-Modify config.py
-
-Install lights.service
-
-Shout to MQTT!
