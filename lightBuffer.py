@@ -34,3 +34,6 @@ class lightBuffer():
         tmp = deque(self.buffer)
         tmp.rotate(steps)
         self.buffer = list(tmp)
+
+#    def __add__(self):
+#        

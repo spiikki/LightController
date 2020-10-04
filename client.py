@@ -21,6 +21,6 @@ try:
     while(1):
         hal.loopBuffer(buffer.getBuffer())
         buffer.rotate(-1)
-        sleep(0.025)
+        sleep(0.04)
 except KeyboardInterrupt:
     hal.stop()
