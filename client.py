@@ -14,7 +14,9 @@ buffer = lightBuffer()
 #]
 
 buffer.tween((0,0,0),(255,255,0),60)
-buffer.tween((255,255,0),(0,0,0),60)
+buffer.tween((255,255,0),(10,50,50),60)
+buffer.tween((10,50,50),(50,100,150),60)
+buffer.tween((50,100,150),(0,0,0),60)
 
 try:
     hal.start()

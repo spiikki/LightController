@@ -8,7 +8,6 @@ This system listen for MQTT-messages and sets lighting to desired state.
 
 RaspberryPi, NeoPixel led-strip
 
-## Install
+## Usage
 
-`pip3 install -r requirements.txt`
-
+Check client.py for simple example.
