@@ -1,4 +1,6 @@
-class lightbuffer():
+from collections import deque
+
+class lightBuffer():
     def __init__(self):
         self.buffer = []
 
@@ -28,3 +30,7 @@ class lightbuffer():
     def getFrame(self, index):
         return self.buffer[index]
 
+    def rotate(self, steps):
+        tmp = deque(self.buffer)
+        tmp.rotate(steps)
+        self.buffer = list(tmp)

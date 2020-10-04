@@ -1,26 +1,26 @@
 from lightAdapter import *
+from lightBuffer import *
 from time import sleep
 from collections import deque
 
 hal = lightAdapter()
+buffer = lightBuffer()
 
-hal.start()
+#buffer = [
+#    (255, 200, 0),
+#    (200, 255, 0),
+#    (225, 225, 0),
+#    (125, 125, 0),
+#]
 
-buffer = [
-   (255, 200, 0),
-   (200, 255, 0),
-   (225, 225, 0),
-   (125, 125, 0),
-]
-
-#hal.loopBuffer(buffer)
+buffer.tween((0,0,0),(255,255,0),60)
+buffer.tween((255,255,0),(0,0,0),60)
 
 try:
-   while(1):
-      hal.loopBuffer(buffer)
-      tmp = deque(buffer)
-      tmp.rotate(1)
-      buffer = list(tmp)
-      sleep(0.25)
+    hal.start()
+    while(1):
+        hal.loopBuffer(buffer.getBuffer())
+        buffer.rotate(-1)
+        sleep(0.025)
 except KeyboardInterrupt:
-   hal.stop()
+    hal.stop()
