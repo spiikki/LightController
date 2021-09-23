@@ -1,22 +1,14 @@
 from lightAdapter import *
 from lightBuffer import *
 from time import sleep
-from collections import deque
 
 hal = lightAdapter()
 buffer = lightBuffer()
 
-#buffer = [
-#    (255, 200, 0),
-#    (200, 255, 0),
-#    (225, 225, 0),
-#    (125, 125, 0),
-#]
-
-buffer.tween((0,0,0),(255,255,0),60)
-buffer.tween((255,255,0),(10,50,50),60)
-buffer.tween((10,50,50),(50,100,150),60)
-buffer.tween((50,100,150),(0,0,0),60)
+buffer.tween((0,0,0),(0,255,0),10)
+buffer.tween((0,255,0),(0,250,0),10)
+buffer.tween((0,250,0),(0,250,0),10)
+buffer.tween((0,250,0),(0,0,0),10)
 
 try:
     hal.start()
