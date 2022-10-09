@@ -2,7 +2,11 @@ from collections import deque
 
 class lightBuffer():
     def __init__(self):
-        self.buffer = []
+        self.buffer = [(0, 0, 0)]
+
+    def set(self, value):
+        print(value)
+        self.buffer = [(value[0], value[1], value[2])]
 
     def tween(self, start, end, frames):
         redFrameDelta = start[0]-end[0]
