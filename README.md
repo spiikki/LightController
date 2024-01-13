@@ -15,8 +15,10 @@ Topics used in client require settings for light and sauna.
 
 ### Setting lighting scene
 
-Topic 'light/1'
-'''
+Topic `light/1`
+
+Set rotating two color tween over whole strip
+```json
 {
   "cmd": "set",
   "buffer": [
@@ -28,12 +30,17 @@ Topic 'light/1'
     "speed": 0.2
   }
 }
-'''
-Set rotating two color tween over whole strip
+```
 
-
-'''
-{ "cmd" : "sauna" }
-'''
 Set sauna-mode on.
+```json
+{ "cmd" : "sauna" }
+```
 
+### Sauna-mode
+
+Expecting `sensor/sauna` topic to receive sauna-status in format:
+
+```json
+{ "temperature" : 22.5 }
+```
