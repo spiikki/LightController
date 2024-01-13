@@ -1,0 +1,4 @@
+mqtt_host = "localhost"
+mqtt_port = 1883
+mqtt_light_topic = "light/1"
+mqtt_sauna_topic = "sensors/sauna"
