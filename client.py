@@ -64,9 +64,10 @@ def mqtt_on_message(client, userdata, msg):
     except:
         print("somethings fucked! don't care! let's go!")
 
-mqtt_client = mqtt.Client()
+mqtt_client = mqtt.Client(client_id=settings.mqtt_client_id)
 mqtt_client.on_connect = mqtt_on_connect
 mqtt_client.on_message = mqtt_on_message
+mqtt_client.username_pw_set(username=settings.mqtt_user, password=settings.mqtt_pwd)
 mqtt_client.connect(settings.mqtt_host, settings.mqtt_port, 30)
 mqtt_client.loop_start()
 

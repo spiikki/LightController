@@ -1,4 +1,7 @@
 mqtt_host = "localhost"
 mqtt_port = 1883
+mqtt_user = ""
+mqtt_pwd = ""
+mqtt_client_id = "rpi-light"
 mqtt_light_topic = "light/1"
 mqtt_sauna_topic = "sensors/sauna"
