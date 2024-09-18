@@ -47,7 +47,7 @@ def mqtt_on_message(client, userdata, msg):
             state = "sauna"
         elif "sauna" in msg.topic:
             if "temperature" in command:
-                print(command["temperature"])
+                # print(command["temperature"])
                 green = 255-(320*(command["temperature"]/100)-17)
                 if green > 255:
                     green = 255
