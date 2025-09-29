@@ -3,6 +3,7 @@ import board
 import neopixel
 import math
 import time
+import settings
 
 current_milli_time = lambda: round(time.time() * 1000)
 
@@ -11,23 +12,24 @@ class lightAdapter:
    pixelBuffer = []
    running = False
    thread = None
-   pixelsAmount = 30
+   pixelsAmount = settings.pixel_amount
 
    def __init__(self):
       self.pixels = neopixel.NeoPixel(board.D18, self.pixelsAmount, brightness=1.0, auto_write=False, pixel_order=neopixel.GRB)
       for i in range(0, self.pixelsAmount):
           self.pixelBuffer.append((0,0,0))
-      print(len(self.pixelBuffer))
+      print("init buffer size: " + str(len(self.pixelBuffer)))
 
    def run(self):
-      print("Started")
+      print("LightAdapter Started")
       self.running = True
       while(self.running):
-         now = current_milli_time()
+         #now = current_milli_time()
          for pixel in range(0, self.pixelsAmount):
             self.pixels[pixel] = self.pixelBuffer[pixel] #(red, blue, green)
          self.pixels.show()
-      print("Stopped")
+         time.sleep(0.0016666667)
+      print("LightAdapter Stopped")
 
    def stop(self):
       self.running = False
@@ -45,5 +47,8 @@ class lightAdapter:
          self.pixelBuffer[i] = pattern[int(i*increment)]
 
    def loopBuffer(self, pattern):
-      for i in range(0, self.pixelsAmount):
-         self.pixelBuffer[i] = pattern[i%len(pattern)]
+      if len(pattern) == 0:
+         print("pattern is empty!")
+      if len(pattern) > 0:
+         for i in range(0, self.pixelsAmount):
+            self.pixelBuffer[i] = pattern[i%len(pattern)]

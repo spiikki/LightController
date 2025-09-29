@@ -8,7 +8,8 @@ import settings
 hal = lightAdapter()
 buffer = lightBuffer()
 rotation_speed = 0.04
-state = "sauna"
+state = "light"
+processing_message = False
 
 def mqtt_on_connect(client, userdata, flags, rc):
     print("Connected! : "+str(rc))
@@ -18,23 +19,30 @@ def mqtt_on_connect(client, userdata, flags, rc):
 def mqtt_on_message(client, userdata, msg):
     global rotation_speed
     global state
-    print(msg.topic + " : ")
+    processing_message = True
     try:
         command = jsons.loads(msg.payload)
-        print(command)
+        print(msg.topic, " received command: ", command)
+#        print("size of received buffer: ", len(command["buffer"]))
         tween_size=1
         if "cmd" in command and command["cmd"] == "set":
             state = "light"
             if "tween_size" in command:
                 tween_size=command["tween_size"]
-            if len(command["buffer"]) < 2:
-                buffer.set(command["buffer"][0])
+
+            if len(command["buffer"]) == 1:
+                print("just before set")
+                print(command["buffer"][0])
+                buffer.set(command["buffer"])
+                print("right after set")
             else:
-                if (len(command["buffer"])*tween_size) < 30:
-                    tween_size = int(30/(len(command["buffer"])-1))+1
+                if (len(command["buffer"])*tween_size) < settings.pixel_amount:
+                    tween_size = int(settings.pixel_amount/(len(command["buffer"])-1))+1
+                print("buffer size", len(command["buffer"]), "tween size", tween_size, "settings.pixels" , settings.pixel_amount)
                 buffer.clearBuffer()
                 for set in range(0, len(command["buffer"])-1):
                     buffer.tween(command["buffer"][set], command["buffer"][set+1], tween_size)
+                print("new buffer: ", buffer)
             if "rotation" in command:
                 if "enable" in command["rotation"]:
                     if command["rotation"]["enable"] == "True":
@@ -45,6 +53,10 @@ def mqtt_on_message(client, userdata, msg):
                     rotation_speed = command["rotation"]["speed"]
         if "cmd" in command and command["cmd"] == "sauna":
             state = "sauna"
+        if "cmd" in command and command["cmd"] == "direct":
+            state = "light"
+            if "buffer" in command:
+                buffer.set(command["buffer"])
         elif "sauna" in msg.topic:
             if "temperature" in command:
                 # print(command["temperature"])
@@ -61,8 +73,11 @@ def mqtt_on_message(client, userdata, msg):
                     else:
                         buffer.set([255, int(green), 0])
 
-    except:
+    except Exception as e:
+        print(e)
         print("somethings fucked! don't care! let's go!")
+
+    processing_message = False
 
 mqtt_client = mqtt.Client(client_id=settings.mqtt_client_id)
 mqtt_client.on_connect = mqtt_on_connect
@@ -74,8 +89,9 @@ mqtt_client.loop_start()
 try:
     hal.start()
     while(1):
-        hal.loopBuffer(buffer.getBuffer())
-        buffer.rotate(-1)
+        if(processing_message == False):
+           hal.loopBuffer(buffer.getBuffer())
+           buffer.rotate(-1)
         sleep(rotation_speed)
 except KeyboardInterrupt:
     hal.stop()
