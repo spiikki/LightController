@@ -1,0 +1,106 @@
+<!DCOTYPE html>
+<html lang="fi" data-bs-theme="dark">
+    <head>
+        <meta charset=""utf-8">
+        <title>Valovattu - Ohjauspannaali</title>
+        <link href="/static/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <style>
+            body {
+                background-color: #333;
+                font-palette: #777;
+            }
+
+            p, input, button {
+                margin: 1em;
+            }
+
+            input.colpick {
+                width: 5em;
+                height: 5em;
+            }
+            div.view {
+                width: 50%;
+            }
+        </style>
+    </head>
+    <body class="text-bg-dark">
+        <div class="container-sm view">
+            <p class="text-center">
+                riipase tuosta vähä väreja ja strüüttaa inee
+            </p>
+            <div id="colors" class="d-flex justify-content-center">
+                <input type="color" class="form-inline colpick" value="#563d7c">
+            </div>
+            <p class="text-center">
+                <button id="less" class="btn btn-lg btn-outline-primary">-</button>
+                <button id="more" class="btn btn-lg btn-outline-primary">+</button>
+                <input type="range" class="form-range slider" id="intensity" min="0" max="100" value="100">
+                <button id="sendit" class="btn btn-lg btn-outline-secondary">Commit</button>
+            </p>
+        </div>
+        <script src="/static/jquery-3.7.1.min.js"></script>
+        <script>
+            var buffer_size = 0
+
+            $(document).ready(function(e) {
+                console.log("document ready")
+                //loadState()
+            
+            })
+
+            function loadState() {
+                $.getJSON("/state", function(data) {
+                    console.log(data)
+                })
+            }
+
+            function sendState(data) {
+                $.ajax("/set", {
+			data: data,
+			contentType: "application/json",
+			type: "POST" 
+		})
+                .done( function(data) { console.log("success! : ", data) } )
+                .fail( function(data) { console.log("fail!! : ", data) })
+            }
+
+            function generateBuffer(elements) {
+                var buffer = []
+                $.each(elements, function(index, color) {
+                    console.log(index, color.value)
+                    buffer.push(parseColor(color.value))
+                })
+                return buffer
+            }
+
+            function parseColor(color) {
+                var int = $("#intensity").val()
+                const r = parseInt(parseInt(color.substr(1,2), 16) * (int/100))
+                const g = parseInt(parseInt(color.substr(3,2), 16) * (int/100))
+                const b = parseInt(parseInt(color.substr(5,2), 16) * (int/100))
+                return [r, g ,b]
+            }
+
+            $("#more").on("click", function(event) {
+                console.log("more is more")
+                $("#colors").append('<input type="color" class="form-inline colpick" value="#563d7c">')
+                buffer_size+=1
+            })
+
+            $("#less").on("click", function(event) {
+                console.log("less is not more")
+                $("#colors input").last().remove()
+            })
+
+            $("#sendit").on('click', function(event) {
+                var buffer = generateBuffer($("#colors input"))
+                var data = {
+                    cmd : "set",
+                    buffer : buffer
+                }
+                console.log(data)
+                sendState(JSON.stringify(data))
+            })
+        </script>
+    </body>
+</html>
